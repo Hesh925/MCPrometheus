@@ -1,0 +1,5 @@
+name: MCPrometheus
+version: '${project.version}'
+main: com.hesh925.mcprometheus.MCPrometheus
+api-version: '1.20'
+load: STARTUP
