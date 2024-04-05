@@ -1,0 +1,11 @@
+# Config file for PaperPrometheus
+Exporter:
+  # Port to listen on
+  Port: 25566
+
+  # Prefix for all metrics. Do not end with _
+  PromPrefix: "paper_mc"
+
+  # Sets number of samples fot TPS calculation
+  TPSSamples: 20
+  LowTPS: 16.0

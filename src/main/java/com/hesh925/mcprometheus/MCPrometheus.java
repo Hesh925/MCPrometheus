@@ -1,53 +1,41 @@
 package com.hesh925.mcprometheus;
 
+import com.hesh925.mcprometheus.prometheus.Prometheus;
 import io.prometheus.metrics.exporter.httpserver.HTTPServer;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hesh925.mcprometheus.PAPI.PAPI;
-
 import java.io.File;
+import java.io.IOException;
 
 public final class MCPrometheus extends JavaPlugin {
     public static MCPrometheus instance;
-    private HTTPServer httpServer;
+
+    public static YamlConfiguration config;
+
+    private Prometheus prom_instance;
     private File mainConfigFile;
+    private static final String ConfigPath = "Prom.yml";
 
 
-    @Override
-    public void onEnable() {
-        instance = this;
+ @Override
+ public void onEnable() {
+     instance = this;
 
+     mainConfigFile = new File(getDataFolder(), ConfigPath);
+     if (!mainConfigFile.exists()) saveResource(ConfigPath, false);
 
-        // get config file
-        mainConfigFile = new File(getDataFolder(), "config.yml");
-        if (!mainConfigFile.exists()) {
-            try {
-                saveResource("config/config.yml", false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(mainConfigFile);
+     getLogger().info("Loading config");
 
-        // Plugin startup logic
+     config = YamlConfiguration.loadConfiguration(mainConfigFile);
 
-
-        // register PAPI
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            getLogger().info("Registering PAPI");
-            new PAPI().register();
-        } else {
-            getLogger().log(java.util.logging.Level.SEVERE, "Could not find PlaceholderAPI!!");
-            getLogger().log(java.util.logging.Level.SEVERE, "Please install it to use this plugin.");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
-
-    }
+     prom_instance = new Prometheus(this);
+ }
 
     @Override
     public void onDisable() {
+        prom_instance.stop();
         // Plugin shutdown logic
     }
 }

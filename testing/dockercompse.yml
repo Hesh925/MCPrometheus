@@ -1,0 +1,18 @@
+version: "3"
+services:
+  minecraft:
+    image: marctv/minecraft-papermc-server:1.20
+    restart: no
+    container_name: "mcserver"
+    environment:
+      MEMORYSIZE: "1G"
+      PAPERMC_FLAGS: ""
+    ports:
+        - "25565:25565"
+        - "25566:25566"
+    volumes:
+      - ./paper_1_20:/data
+      - ../target/MCPrometheus-1.0-SNAPSHOT.jar:/data/plugins/MCPrometheus.jar
+    # The following allow `docker attach minecraft` to work
+    stdin_open: true
+    tty: true
